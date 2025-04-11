@@ -1,17 +1,40 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# 🏎️ PitLap
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+[![CI](https://github.com/yourusername/pitlap/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/pitlap/actions)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.9.0-blue?logo=kotlin)](https://kotlinlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+**PitLap** is a beautifully crafted cross-platform Formula 1 app for the 2025 season. Built with **Kotlin Multiplatform Mobile (KMM)**, it brings the full race schedule, session reminders, and offline support to Android and iOS users alike.
 
-* `/shared` is for the code that will be shared between all targets in the project.
-  The most important subfolder is `commonMain`. If preferred, you can add code to the platform-specific folders here too.
+---
+
+## 📸 Screenshots
+
+_Coming soon..._
+
+---
+
+## ✨ Features
+
+- 📅 Browse the full F1 2025 race calendar
+- 🔔 Set reminders for Practice, Qualifying, and Race sessions
+- 💾 Offline-first with SQLDelight caching
+- 🌙 Native dark mode support
+- 🎯 Clean and responsive UI (Jetpack Compose & SwiftUI)
+
+---
+
+## ⚙️ Tech Stack
+
+| Layer               | Technology                         |
+|---------------------|-------------------------------------|
+| Shared logic        | Kotlin Multiplatform Mobile (KMM)  |
+| Android UI          | Jetpack Compose                    |
+| iOS UI              | SwiftUI                            |
+| Database            | SQLDelight                         |
+| Networking (opt.)   | Ktor Client                        |
+| Async layer         | Kotlin Coroutines + Flow           |
+| DI                  | Manual Dependency Injection        |
+| CI/CD               | GitHub Actions + Fastlane (planned)|
 
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…

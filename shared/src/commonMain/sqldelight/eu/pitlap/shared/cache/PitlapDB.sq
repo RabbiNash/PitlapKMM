@@ -1,0 +1,30 @@
+CREATE TABLE EventSchedule (
+    round INTEGER NOT NULL,
+    country TEXT NOT NULL,
+    officialEventName TEXT NOT NULL,
+    eventName TEXT NOT NULL,
+    eventFormat TEXT NOT NULL,
+    session1 TEXT NOT NULL,
+    session1DateUTC TEXT,
+    session2 TEXT NOT NULL,
+    session2DateUTC TEXT,
+    session3 TEXT NOT NULL,
+    session3DateUTC TEXT,
+    session4 TEXT NOT NULL,
+    session4DateUTC TEXT,
+    session5 TEXT NOT NULL,
+    session5DateUTC TEXT,
+    year TEXT NOT NULL
+);
+
+insertEvent:
+INSERT INTO EventSchedule(round, country, officialEventName, eventName, eventFormat, session1,session1DateUTC, session2, session2DateUTC, session3, session3DateUTC, session4, session4DateUTC, session5,session5DateUTC, year)
+VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+removeAllEVents:
+DELETE FROM EventSchedule;
+
+selectAllEventsInfo:
+SELECT EventSchedule.*
+FROM EventSchedule;
+

@@ -51,6 +51,10 @@ internal class PitlapServiceImpl(
         return scheduleRepository.getSchedule(year)
     }
 
+    override suspend fun getEvent(year: Int, round: Int): EventScheduleModel? {
+        return scheduleRepository.getEvent(year, round)
+    }
+
     override suspend fun getRaceSummary(year: Int, round: Int): RaceSummaryModel {
         return summaryRepository.getRaceSummary(year, round)
     }

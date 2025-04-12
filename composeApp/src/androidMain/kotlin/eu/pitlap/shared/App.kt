@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import eu.pitlap.shared.schedule.domain.model.EventScheduleModel
 import eu.pitlap.shared.standings.domain.model.DriverStandingModel
+import eu.pitlap.shared.ui.pitlapTypography
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -22,7 +23,7 @@ import pitlap.composeapp.generated.resources.compose_multiplatform
 @Composable
 @Preview
 fun App(standings: List<DriverStandingModel>, schedule: List<EventScheduleModel> = emptyList()) {
-    MaterialTheme {
+    MaterialTheme() {
         var showContent by remember { mutableStateOf(false) }
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = { showContent = !showContent }) {

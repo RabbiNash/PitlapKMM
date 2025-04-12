@@ -1,5 +1,8 @@
 package eu.pitlap.shared.race.data.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 internal data class PracticeLapsDto(
     val year: Int,
     val round: Int,
@@ -8,6 +11,7 @@ internal data class PracticeLapsDto(
     val laps: List<LapDto>
 )
 
+@Serializable
 internal data class LapDto(
     val driver: String,
     val headshotUrl: String,

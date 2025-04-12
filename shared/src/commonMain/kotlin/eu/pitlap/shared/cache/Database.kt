@@ -10,6 +10,14 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         return dbQuery.selectAllEventsInfo(::mapToEventScheduleModel).executeAsList()
     }
 
+    internal fun getEventByYearAndRound(year: Long, round: Long): EventScheduleModel? {
+        return dbQuery.selectEventByYearAndRound(year.toString(), round, ::mapToEventScheduleModel).executeAsOneOrNull()
+    }
+
+    internal fun getEventByYear(year: Long): List<EventScheduleModel> {
+        return dbQuery.selectEventByYear(year.toString(), ::mapToEventScheduleModel).executeAsList()
+    }
+
     private fun mapToEventScheduleModel(
         round: Long,
         country: String,

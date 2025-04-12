@@ -28,3 +28,14 @@ selectAllEventsInfo:
 SELECT EventSchedule.*
 FROM EventSchedule;
 
+selectEventByYearAndRound:
+SELECT EventSchedule.*
+FROM EventSchedule
+WHERE year = ? AND round = ?
+LIMIT 1;
+
+selectEventByYear:
+SELECT EventSchedule.*
+FROM EventSchedule
+WHERE year = ?;
+

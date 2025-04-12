@@ -16,6 +16,7 @@ interface PitlapService {
     suspend fun getQualifyingResults(year: Int, round: Int): List<QualifyingResultModel>
     suspend fun getRaceResults(year: Int, round: Int): List<RaceResultModel>
     suspend fun getSchedule(year: Int): List<EventScheduleModel>
+    suspend fun getEvent(year: Int, round: Int): EventScheduleModel?
     suspend fun getRaceSummary(year: Int, round: Int): RaceSummaryModel
     suspend fun getTrackSummary(trackName: String): TrackSummaryModel
 }

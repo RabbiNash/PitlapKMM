@@ -1,9 +1,13 @@
 package eu.pitlap.shared.race.data.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 internal data class RaceResultsDto(
     val results: List<RaceResultDto>
 )
 
+@Serializable
 internal data class RaceResultDto(
     val position: Int,
     val headshotURL: String,

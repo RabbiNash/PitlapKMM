@@ -10,10 +10,13 @@ fun BottomBar(navController: NavController) {
     val items = listOf(
         BottomNavItem.Schedule,
         BottomNavItem.Standings,
-        BottomNavItem.House
+        BottomNavItem.Trivia
     )
     
-    NavigationBar {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground
+    ) {
         items.forEach { item ->
             val currentRoute = navController.currentBackStackEntry?.destination?.route
             

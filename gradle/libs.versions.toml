@@ -14,6 +14,7 @@ androidx-test-junit = "1.2.1"
 coilCompose = "2.7.0"
 compose-multiplatform = "1.7.3"
 coroutinesVersion = "1.10.1"
+firebaseBom = "33.12.0"
 junit = "4.13.2"
 kotlin = "2.1.20"
 koin = "3.5.3"
@@ -29,6 +30,11 @@ serialization = "1.8.1"
 androidx-material3-vlatestversion = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+google-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+google-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutinesVersion" }

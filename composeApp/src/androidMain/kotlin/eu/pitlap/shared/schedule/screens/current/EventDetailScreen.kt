@@ -15,6 +15,7 @@ import eu.pitlap.shared.schedule.models.sessionName
 import eu.pitlap.shared.schedule.models.sessionTime
 import eu.pitlap.shared.schedule.state.EventDetailScreenEvent
 import eu.pitlap.shared.schedule.viewmodel.EventDetailViewModel
+import eu.pitlap.shared.utils.DateUtils
 
 @Composable
 fun EventDetailScreen(
@@ -22,12 +23,16 @@ fun EventDetailScreen(
     viewModel: EventDetailViewModel = viewModel(),
     year: Int,
     round: Int,
-    onEventClick: (EventScheduleModel, String) -> Unit
+    onEventClick: (EventDetailScreenEvent) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(EventDetailScreenEvent.LoadEvent(year, round))
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(EventDetailScreenEvent.LoadRaceSummary(year, round))
     }
 
     LazyColumn(
@@ -47,12 +52,10 @@ fun EventDetailScreen(
                 SessionTimesView(event = it, onEventClick = onEventClick)
             }
 
-            item {
-                RaceSummaryView("Let me know if you're using a custom navigation setup (e.g., Hilt, multiple NavHosts, or rememberSaveable for nav state), and I’ll tweak the code for you.")
-            }
-
-            item {
-                TrackFactsView("Let me know if you're using a custom navigation setup (e.g., Hilt, multiple NavHosts, or rememberSaveable for nav state), and I’ll tweak the code for you.")
+            state.raceSummary?.let {
+                item {
+                    RaceSummaryView(it)
+                }
             }
 
             item {
@@ -63,30 +66,43 @@ fun EventDetailScreen(
 }
 
 @Composable
-fun SessionTimesView(event: EventScheduleModel, onEventClick: (EventScheduleModel, String) -> Unit) {
+fun SessionTimesView(event: EventScheduleModel, onEventClick: (EventDetailScreenEvent) -> Unit) {
     Column(modifier = Modifier
         .padding(vertical = 16.dp)
         .fillMaxWidth()) {
-        Text(text = event.eventName, style = MaterialTheme.typography.displaySmall)
+
+        Text(
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = event.eventName,
+            style = MaterialTheme.typography.displaySmall
+        )
+
         SessionType.entries.forEach { sessionType ->
             val sessionTime = event.sessionTime(sessionType)
             val sessionName = event.sessionName(sessionType)
 
             if (sessionName != "None" && sessionTime != null) {
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .clickable {  }
-//                        .padding(vertical = 16.dp),
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Text(text = sessionName, modifier = Modifier.weight(1f))
-//                    Text(text = sessionTime, style = MaterialTheme.typography.bodySmall)
-//                }
-//                HorizontalDivider()
                 EventSessionItem(
                     modifier = Modifier.clickable {
-                        onEventClick(event, sessionName)
+                        if (DateUtils.isPastDate(sessionTime)) {
+                            onEventClick(
+                                when (sessionType) {
+                                    SessionType.SESSION4 -> EventDetailScreenEvent.LoadQualifying(
+                                        year = event.year.toInt(),
+                                        round = event.round,
+                                    )
+                                    SessionType.SESSION5 -> EventDetailScreenEvent.LoadRaceResult(
+                                        year = event.year.toInt(),
+                                        round = event.round,
+                                    )
+                                    else -> EventDetailScreenEvent.LoadPracticeLaps(
+                                        year = event.year.toInt(),
+                                        round = event.round,
+                                        sessionName = sessionName
+                                    )
+                                }
+                            )
+                        }
                     },
                     sessionName = sessionName,
                     sessionTime = sessionTime

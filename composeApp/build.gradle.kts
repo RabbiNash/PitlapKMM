@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 kotlin {
@@ -38,6 +40,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.coil.compose)
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.google.firebase.crashlytics)
+            implementation(libs.google.firebase.analytics)
 
             implementation(projects.shared)
         }

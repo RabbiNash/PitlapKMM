@@ -1,10 +1,20 @@
 package eu.pitlap.shared.schedule.screens.current
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -15,7 +25,10 @@ import eu.pitlap.shared.schedule.models.sessionName
 import eu.pitlap.shared.schedule.models.sessionTime
 import eu.pitlap.shared.schedule.state.EventDetailScreenEvent
 import eu.pitlap.shared.schedule.viewmodel.EventDetailViewModel
+import eu.pitlap.shared.ui.shared.HeaderText
 import eu.pitlap.shared.utils.DateUtils
+import eu.pitlap.shared.weather.WeatherEntryCard
+import eu.pitlap.shared.weather.domain.model.WeatherModel
 
 @Composable
 fun EventDetailScreen(
@@ -33,6 +46,10 @@ fun EventDetailScreen(
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(EventDetailScreenEvent.LoadRaceSummary(year, round))
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(EventDetailScreenEvent.LoadWeather(year, round))
     }
 
     LazyColumn(
@@ -58,6 +75,18 @@ fun EventDetailScreen(
                 }
             }
 
+            state.weather?.let {
+                item {
+                    WeatherItem(weatherModel = it, event = state.event!!)
+                }
+            }
+
+            state.trackSummary?.let {
+                item {
+                    TrackFactsView(it)
+                }
+            }
+
             item {
                 Spacer(modifier = Modifier.height(24.dp))
             }
@@ -71,11 +100,7 @@ fun SessionTimesView(event: EventScheduleModel, onEventClick: (EventDetailScreen
         .padding(vertical = 16.dp)
         .fillMaxWidth()) {
 
-        Text(
-            modifier = Modifier.padding(bottom = 8.dp),
-            text = event.eventName,
-            style = MaterialTheme.typography.displaySmall
-        )
+        HeaderText(text = event.eventName)
 
         SessionType.entries.forEach { sessionType ->
             val sessionTime = event.sessionTime(sessionType)
@@ -87,15 +112,17 @@ fun SessionTimesView(event: EventScheduleModel, onEventClick: (EventDetailScreen
                         if (DateUtils.isPastDate(sessionTime)) {
                             onEventClick(
                                 when (sessionType) {
-                                    SessionType.SESSION4 -> EventDetailScreenEvent.LoadQualifying(
+                                    SessionType.SESSION4 -> EventDetailScreenEvent.LoadSessionDetail(
                                         year = event.year.toInt(),
                                         round = event.round,
+                                        sessionName = sessionName
                                     )
-                                    SessionType.SESSION5 -> EventDetailScreenEvent.LoadRaceResult(
+                                    SessionType.SESSION5 -> EventDetailScreenEvent.LoadSessionDetail(
                                         year = event.year.toInt(),
                                         round = event.round,
+                                        sessionName = sessionName
                                     )
-                                    else -> EventDetailScreenEvent.LoadPracticeLaps(
+                                    else -> EventDetailScreenEvent.LoadSessionDetail(
                                         year = event.year.toInt(),
                                         round = event.round,
                                         sessionName = sessionName
@@ -131,9 +158,19 @@ fun SummaryView(title: String, content: String) {
     Column(modifier = Modifier
         .padding(vertical = 8.dp)
     ) {
-        Text(text = title, style = MaterialTheme.typography.displaySmall)
+        HeaderText(title)
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = content, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+fun WeatherItem(weatherModel: WeatherModel, event: EventScheduleModel) {
+    Column(
+        horizontalAlignment = Alignment.Start
+    ) {
+        HeaderText(text = "Race Day Weather")
+        WeatherEntryCard(weatherModel = weatherModel, eventModel = event)
     }
 }
 

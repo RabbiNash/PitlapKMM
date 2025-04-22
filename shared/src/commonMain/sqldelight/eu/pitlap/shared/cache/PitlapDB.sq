@@ -1,3 +1,14 @@
+
+CREATE TABLE YoutubeVideo (
+    video_id TEXT NOT NULL PRIMARY KEY,
+    thumbnail_url TEXT,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    channel_name TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
 CREATE TABLE EventSchedule (
     round INTEGER NOT NULL,
     country TEXT NOT NULL,
@@ -39,3 +50,24 @@ SELECT EventSchedule.*
 FROM EventSchedule
 WHERE year = ?;
 
+insertOrReplaceVideo:
+INSERT OR REPLACE INTO YoutubeVideo (
+    video_id, thumbnail_url, title, description, channel_name, created_at, updated_at
+) VALUES (?, ?, ?, ?, ?, ?,?);
+
+selectAllVideos:
+SELECT * FROM YoutubeVideo
+ORDER BY created_at DESC
+LIMIT 30;
+
+selectVideoById:
+SELECT * FROM YoutubeVideo
+WHERE video_id = ?
+LIMIT 1;
+
+selectVideoByChannelName:
+SELECT * FROM YoutubeVideo
+WHERE channel_name LIKE ?;
+
+deleteAllVideos:
+DELETE FROM YoutubeVideo;

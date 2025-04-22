@@ -1,4 +1,4 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -43,6 +43,10 @@ kotlin {
             implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.google.firebase.crashlytics)
             implementation(libs.google.firebase.analytics)
+            implementation(libs.androidx.material.icons.extended)
+            implementation(libs.material.icons.extended)
+            implementation(libs.youtube.core)
+            implementation(libs.charty)
 
             implementation(projects.shared)
         }

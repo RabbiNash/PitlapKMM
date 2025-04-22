@@ -1,13 +1,20 @@
 package eu.pitlap.shared.schedule.screens.current
 
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -17,10 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import eu.pitlap.shared.schedule.state.ScheduleScreenEvent
-import eu.pitlap.shared.schedule.viewmodel.ScheduleViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import eu.pitlap.shared.schedule.domain.model.EventScheduleModel
+import eu.pitlap.shared.schedule.state.ScheduleScreenEvent
+import eu.pitlap.shared.schedule.viewmodel.ScheduleViewModel
+import eu.pitlap.shared.ui.pitlapTypography
 
 @Composable
 fun EventListScreen(
@@ -65,8 +73,8 @@ fun EventListScreen(
                     }) {
                         Text(
                             text = if (state.showPastEvents) "Hide past" else "Show all",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color.Black
+                            style = pitlapTypography.titleMedium,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }

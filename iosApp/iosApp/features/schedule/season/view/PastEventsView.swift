@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PitlapKit
 
 struct PastEventsView: View {
     @State var selectedTab: SeasonTabOption = .current

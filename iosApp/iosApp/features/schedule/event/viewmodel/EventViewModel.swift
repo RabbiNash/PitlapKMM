@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Shared
+import PitlapKit
 
 final class EventViewModel: ObservableObject {
     @Published var trackSummary: TrackSummaryModel? = nil

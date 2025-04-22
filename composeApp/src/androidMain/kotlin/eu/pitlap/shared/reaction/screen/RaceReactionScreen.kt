@@ -77,7 +77,7 @@ fun StartLight(isActive: Boolean) {
         modifier = Modifier
             .size(40.dp)
             .background(
-                color = if (isActive) Color.Red else Color.White,
+                color = if (isActive) Color.Red else Color.Transparent,
                 shape = CircleShape
             )
             .border(1.dp, Color.Red, CircleShape)
@@ -115,7 +115,8 @@ fun ControlButton(
     ) {
         Text(
             text = if (isSequenceRunning) "Go Go" else "Start",
-            style = MaterialTheme.typography.displayMedium
+            style = MaterialTheme.typography.displayLarge,
+            color = Color.White
         )
     }
 }

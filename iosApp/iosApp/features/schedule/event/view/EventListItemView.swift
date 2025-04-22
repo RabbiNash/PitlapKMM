@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Shared
+import PitlapKit
 
 struct EventListItemView: View {
 

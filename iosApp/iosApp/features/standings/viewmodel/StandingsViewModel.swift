@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Shared
+import PitlapKit
 
 final class StandingsViewModel: ObservableObject {
     private let pitlapService: PitlapService

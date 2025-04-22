@@ -8,7 +8,10 @@ import eu.pitlap.shared.schedule.domain.model.EventScheduleModel
 import eu.pitlap.shared.schedule.state.ScheduleScreenEvent
 import eu.pitlap.shared.schedule.state.ScheduleScreenState
 import eu.pitlap.shared.utils.DateUtils
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -32,8 +35,8 @@ class ScheduleViewModel(
         viewModelScope.launch {
             try {
                 val schedule = pitlapService.getSchedule(year)
-                val filtered = if (showPastEvents) schedule else schedule.filter { isNextEvent(it) }
-                val next = filtered.firstOrNull { isNextEvent(it) }
+                val filtered = if (showPastEvents) schedule.filter { !isNextEvent(it) }.reversed() else schedule.filter { isNextEvent(it) }
+                val next = schedule.firstOrNull { isNextEvent(it) }
 
                 _state.update {
                     it.copy(

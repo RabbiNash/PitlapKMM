@@ -1,0 +1,16 @@
+CREATE TABLE FeedItemMeta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    last_fetched TEXT NOT NULL
+);
+
+getMeta:
+SELECT * FROM FeedItemMeta LIMIT 1;
+
+updateLastFetched:
+UPDATE FeedItemMeta SET last_fetched = :timestamp;
+
+insertMeta:
+INSERT INTO FeedItemMeta(last_fetched) VALUES (:timestamp);
+
+clearMeta:
+DELETE FROM FeedItemMeta;

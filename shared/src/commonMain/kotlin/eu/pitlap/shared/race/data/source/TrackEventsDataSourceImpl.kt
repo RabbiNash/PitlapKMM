@@ -7,6 +7,7 @@ import eu.pitlap.shared.core.domain.Result
 import eu.pitlap.shared.race.data.dto.PracticeLapsDto
 import eu.pitlap.shared.race.data.dto.QualifyingResultsDto
 import eu.pitlap.shared.race.data.dto.RaceResultsDto
+import eu.pitlap.shared.race.data.dto.TopSpeedsDto
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
@@ -37,6 +38,16 @@ internal class TrackEventsDataSourceImpl(
     override suspend fun getRaceResults(year: Int, round: Int): Result<RaceResultsDto, ApiError.Remote> {
         return safeCall<RaceResultsDto> {
             client.get(urlString = "$BASE_URL/race/result/convectional/$year/$round")
+        }
+    }
+
+    override suspend fun getTopSpeeds(
+        year: Int,
+        round: Int,
+        sessionName: String
+    ): Result<TopSpeedsDto, ApiError.Remote> {
+        return safeCall<TopSpeedsDto> {
+            client.get(urlString = "$BASE_URL/speed/$year/$round/$sessionName")
         }
     }
 }

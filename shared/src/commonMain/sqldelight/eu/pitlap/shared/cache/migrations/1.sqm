@@ -1,0 +1,9 @@
+CREATE TABLE YoutubeMeta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    last_fetched TEXT NOT NULL
+);
+
+CREATE TABLE FeedItemMeta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    last_fetched TEXT NOT NULL
+);

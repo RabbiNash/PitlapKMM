@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -16,13 +17,18 @@ kotlin {
         }
     }
 
+    val xcframeworkName = "PitlapKit"
+    val xcf = XCFramework(xcframeworkName)
+
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "Shared"
+            baseName = xcframeworkName
+            binaryOption("bundleId", "eu.pitlap.${xcframeworkName}")
+            xcf.add(this)
             isStatic = true
         }
     }
@@ -32,8 +38,8 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
-
             implementation(libs.bundles.ktor)
+            implementation(libs.rssparser)
         }
 
         androidMain.dependencies {

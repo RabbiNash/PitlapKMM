@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Shared
+import PitlapKit
 
 final class ScheduleViewModel: ObservableObject {
     
@@ -18,6 +18,7 @@ final class ScheduleViewModel: ObservableObject {
     
     @Published var nextSession: EventScheduleModel? = nil
     @Published var seasonCalendar: [EventScheduleModel] = []
+    @Published var weather: WeatherModel? = nil
 
     
     @MainActor
@@ -26,6 +27,31 @@ final class ScheduleViewModel: ObservableObject {
             let schedule = try await pitlapService.getSchedule(year: Int32(year))
             self.seasonCalendar = showPastEvents ? schedule : schedule.filter { self.isNextEvent(event: $0) }
             self.nextSession = getNextEvent(from: self.seasonCalendar)
+        } catch {
+            print("error handling")
+        }
+        
+        await loadWeather()
+        await loadYoutube()
+    }
+    
+    @MainActor
+    func loadWeather() async {
+        do {
+            let weather: WeatherModel = try await pitlapService.getWeather(year: 2025, round: 1)
+            
+            self.weather = weather
+            print(weather)
+        } catch {
+            print("error handling")
+        }
+    }
+    
+    @MainActor
+    func loadYoutube() async {
+        do {
+            let videos = try await pitlapService.getYTVideos(channelName: "Formula 1")
+            print(videos)
         } catch {
             print("error handling")
         }

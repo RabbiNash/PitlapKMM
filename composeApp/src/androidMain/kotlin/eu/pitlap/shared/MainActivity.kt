@@ -26,10 +26,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import eu.pitlap.shared.navigation.BottomBar
-import eu.pitlap.shared.navigation.PitlapNavHost
+import eu.pitlap.shared.navigation.ui.BottomBar
+import eu.pitlap.shared.navigation.graph.PitlapNavHost
 import eu.pitlap.shared.ui.PitlapTheme
-import eu.pitlap.shared.ui.pitlapTypography
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)

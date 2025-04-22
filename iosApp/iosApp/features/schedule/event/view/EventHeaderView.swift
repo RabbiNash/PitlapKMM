@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Shared
+import PitlapKit
 
 struct EventHeaderView: View {
     private let event: EventScheduleModel

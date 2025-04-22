@@ -6,6 +6,7 @@ import eu.pitlap.shared.modules.Pitlap
 import eu.pitlap.shared.modules.PitlapService
 import eu.pitlap.shared.schedule.state.EventDetailScreenEvent
 import eu.pitlap.shared.schedule.state.EventDetailScreenState
+import eu.pitlap.shared.utils.DateUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,6 +24,7 @@ class EventDetailViewModel(
         when (event) {
             is EventDetailScreenEvent.LoadEvent -> fetchEventData(event.year, event.round)
             is EventDetailScreenEvent.LoadRaceSummary -> fetchRaceSummary(event.year, event.round)
+            is EventDetailScreenEvent.LoadWeather -> fetchWeather(event.year, event.round)
             else -> Unit
         }
     }
@@ -32,18 +34,18 @@ class EventDetailViewModel(
 
         viewModelScope.launch {
             val eventResult = runCatching { pitlapService.getEvent(year, round) }
-            val summaryResult = runCatching { pitlapService.getRaceSummary(year, round) }
+            val weatherResult = runCatching { pitlapService.getWeather(year, round) }
 
             eventResult.onSuccess { event ->
                 _state.update { it.copy(event = event) }
+                fetchTrackFacts(event?.eventName ?: "")
             }
 
-            summaryResult.onSuccess { summary ->
-                _state.update { it.copy(raceSummary = summary.summary) }
+            weatherResult.onSuccess {
+                _state.update { it.copy(weather = it.weather) }
             }
 
             val errorMessage = eventResult.exceptionOrNull()?.message
-                ?: summaryResult.exceptionOrNull()?.message
 
             _state.update { it.copy(isLoading = false, error = errorMessage) }
         }
@@ -60,6 +62,48 @@ class EventDetailViewModel(
                     it.copy(
                         isLoading = false,
                         raceSummary = summary.summary
+                    )
+                }
+            }.onFailure { e ->
+                _state.update {
+                    it.copy(isLoading = false, error = e.message)
+                }
+            }
+        }
+    }
+
+    private fun fetchTrackFacts(trackName: String) {
+        updateLoadingState()
+
+        viewModelScope.launch {
+            runCatching {
+                pitlapService.getTrackSummary(trackName)
+            }.onSuccess { summary ->
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        trackSummary = summary.fact
+                    )
+                }
+            }.onFailure { e ->
+                _state.update {
+                    it.copy(isLoading = false, error = e.message)
+                }
+            }
+        }
+    }
+
+    private fun fetchWeather(year: Int, round: Int) {
+        updateLoadingState()
+
+        viewModelScope.launch {
+            runCatching {
+                pitlapService.getWeather(year, round)
+            }.onSuccess { weather ->
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        weather = weather
                     )
                 }
             }.onFailure { e ->

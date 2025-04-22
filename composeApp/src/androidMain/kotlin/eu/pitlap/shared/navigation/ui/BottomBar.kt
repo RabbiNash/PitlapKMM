@@ -1,13 +1,14 @@
-package eu.pitlap.shared.navigation
+package eu.pitlap.shared.navigation.ui
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import eu.pitlap.shared.navigation.destination.BottomNavItem
+import eu.pitlap.shared.navigation.destination.bottom_nav.BottomNavItem
 
 @Composable
 fun BottomBar(navController: NavController) {
     val items = listOf(
+        BottomNavItem.Home,
         BottomNavItem.Schedule,
         BottomNavItem.Standings,
         BottomNavItem.Trivia

@@ -32,10 +32,19 @@ fun EventHeader(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(selectedTeamColor)
+            .background(
+                Brush.sweepGradient(
+                    colors = listOf(
+                        selectedTeamColor,
+                        selectedTeamColor.copy(alpha = 0.5f),
+                        selectedTeamColor,
+                        selectedTeamColor.copy(alpha = 0.5f)
+                    )
+                )
+            )
             .padding(16.dp)
     ) {
-        Column (
+        Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -51,7 +60,7 @@ fun EventHeader(
                 color = Color.White
             )
 
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {

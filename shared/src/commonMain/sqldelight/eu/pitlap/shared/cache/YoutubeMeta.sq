@@ -1,0 +1,16 @@
+CREATE TABLE YoutubeMeta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    last_fetched TEXT NOT NULL
+);
+
+getMeta:
+SELECT * FROM YoutubeMeta LIMIT 1;
+
+updateLastFetched:
+UPDATE YoutubeMeta SET last_fetched = :timestamp;
+
+insertMeta:
+INSERT INTO YoutubeMeta(last_fetched) VALUES (:timestamp);
+
+clearMeta:
+DELETE FROM YoutubeMeta;

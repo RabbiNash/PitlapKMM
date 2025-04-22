@@ -1,0 +1,31 @@
+CREATE TABLE DriverStandings (
+    position INTEGER NOT NULL,
+    positionText TEXT NOT NULL,
+    points INTEGER NOT NULL,
+    wins INTEGER NOT NULL,
+    driverID TEXT NOT NULL,
+    driverNumber INTEGER NOT NULL,
+    givenName TEXT NOT NULL,
+    familyName TEXT NOT NULL,
+    constructorName TEXT NOT NULL
+);
+
+CREATE TABLE ConstructorStandings (
+    position INTEGER NOT NULL,
+    positionText TEXT NOT NULL,
+    points INTEGER NOT NULL,
+    wins INTEGER NOT NULL,
+    constructorId TEXT NOT NULL PRIMARY KEY,
+    constructorName TEXT NOT NULL
+);
+
+CREATE TABLE ConstructorStandingMeta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    last_fetched TEXT NOT NULL
+);
+
+CREATE TABLE DriverStandingMeta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    last_fetched TEXT NOT NULL
+);
+

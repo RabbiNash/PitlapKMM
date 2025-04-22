@@ -1,0 +1,41 @@
+CREATE TABLE DriverStandings (
+    position INTEGER NOT NULL,
+    positionText TEXT NOT NULL,
+    points INTEGER NOT NULL,
+    wins INTEGER NOT NULL,
+    driverID TEXT NOT NULL,
+    driverNumber INTEGER NOT NULL,
+    givenName TEXT NOT NULL,
+    familyName TEXT NOT NULL,
+    constructorName TEXT NOT NULL
+);
+
+insertOrReplaceDriverStanding:
+INSERT OR REPLACE INTO DriverStandings (
+    position,
+    positionText,
+    points,
+    wins,
+    driverID,
+    driverNumber,
+    givenName,
+    familyName,
+    constructorName
+) VALUES (
+    :position,
+    :positionText,
+    :points,
+    :wins,
+    :driverID,
+    :driverNumber,
+    :givenName,
+    :familyName,
+    :constructorName
+);
+
+selectAll:
+SELECT * FROM DriverStandings;
+
+deleteAll:
+DELETE FROM DriverStandings;
+

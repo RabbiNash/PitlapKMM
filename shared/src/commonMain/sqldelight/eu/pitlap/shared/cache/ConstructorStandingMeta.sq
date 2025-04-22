@@ -1,0 +1,16 @@
+CREATE TABLE ConstructorStandingMeta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    last_fetched TEXT NOT NULL
+);
+
+getMeta:
+SELECT * FROM ConstructorStandingMeta LIMIT 1;
+
+updateLastFetched:
+UPDATE ConstructorStandingMeta SET last_fetched = :timestamp;
+
+insertMeta:
+INSERT INTO ConstructorStandingMeta(last_fetched) VALUES (:timestamp);
+
+clearMeta:
+DELETE FROM ConstructorStandingMeta;

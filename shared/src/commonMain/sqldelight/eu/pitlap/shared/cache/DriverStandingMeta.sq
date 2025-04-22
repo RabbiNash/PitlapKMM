@@ -1,0 +1,16 @@
+CREATE TABLE DriverStandingMeta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    last_fetched TEXT NOT NULL
+);
+
+getMeta:
+SELECT * FROM DriverStandingMeta LIMIT 1;
+
+updateLastFetched:
+UPDATE DriverStandingMeta SET last_fetched = :timestamp;
+
+insertMeta:
+INSERT INTO DriverStandingMeta(last_fetched) VALUES (:timestamp);
+
+clearMeta:
+DELETE FROM DriverStandingMeta;

@@ -1,7 +1,7 @@
 package eu.pitlap.shared.videos.data.repository
 
-import eu.pitlap.shared.cache.Database
-import eu.pitlap.shared.cache.DatabaseProvider
+import eu.pitlap.shared.cache.dao.videos.VideoDAO
+import eu.pitlap.shared.cache.factory.DatabaseProvider
 import eu.pitlap.shared.core.domain.Result
 import eu.pitlap.shared.core.domain.toThrowable
 import eu.pitlap.shared.videos.data.source.YoutubeVideosDataSource
@@ -11,43 +11,83 @@ import eu.pitlap.shared.videos.domain.model.Channels
 import eu.pitlap.shared.videos.domain.model.YoutubeVideoModel
 import eu.pitlap.shared.videos.domain.repository.YoutubeVideosRepository
 import kotlin.random.Random
+import kotlin.time.Clock
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 internal class YoutubeVideosRepositoryImpl(
     private val dataSource: YoutubeVideosDataSource = YoutubeVideosDataSourceImpl(),
-    private val database: Database = DatabaseProvider.get(),
+    private val dao: VideoDAO = DatabaseProvider.getVideoDAO(),
     private val mapper: YoutubeVideoMapper = YoutubeVideoMapper()
 ): YoutubeVideosRepository {
-    override suspend fun getVideos(channelName: String): List<YoutubeVideoModel> {
-        database.getYTMeta()
-        val cachedEvents = database.getVideosByChannelName(channelName)
-        return cachedEvents.ifEmpty {
+    private val ttl = Duration.parse("PT1H")
+
+    override suspend fun getVideos(channelName: String, forceRefresh: Boolean): List<YoutubeVideoModel> {
+        val cachedEvents = dao.getVideosByChannelName(channelName)
+        return if (forceRefresh) {
             when (val result = dataSource.getVideos(channelName)) {
                 is Result.Success -> {
                     val data = mapper.mapToYoutubeVideoModel(result.data)
-                    database.clearAndCreateVideos(channelName = channelName, data)
+                    dao.clearAndCreateVideos(channelName = channelName, data)
                     data
                 }
-                is Result.Error -> throw result.error.toThrowable()
+                is Result.Error -> {
+                    return cachedEvents.ifEmpty {
+                        throw result.error.toThrowable()
+                    }
+                }
             }
+        } else {
+            cachedEvents
         }
     }
 
-    override suspend fun getRankedVideos(): List<YoutubeVideoModel> {
-        val cachedVideos = database.getAllVideos()
-        return cachedVideos.ifEmpty {
-            Channels.entries.flatMap { channel ->
-                val videos = getVideos(channel.channelName)
-                val count = Random.nextInt(3, 8)
-                if (videos.size <= 3) {
-                    videos
-                } else {
-                    videos.shuffled().take(count.coerceAtMost(videos.size))
-                }
-            }
+    @OptIn(ExperimentalTime::class)
+    override suspend fun getRankedVideos(forceRefresh: Boolean): List<YoutubeVideoModel> {
+        val cachedVideos = dao.getAllVideos()
+        val meta = dao.getVideoMeta()
+        val videos = if (meta != null && Clock.System.now() - Instant.parse(meta.last_fetched) < ttl) {
+            cachedVideos
+        } else {
+            emptyList()
+        }
+
+        return if (forceRefresh) {
+            getVideosForRanking()
+        } else {
+            videos
         }
     }
 
     override suspend fun getVideoById(videoId: String): YoutubeVideoModel? {
-        return database.getVideoById(videoId)
+        return dao.getVideoById(videoId)
+    }
+
+    @OptIn(ExperimentalTime::class)
+    private suspend fun getVideosForRanking(): List<YoutubeVideoModel> {
+        dao.insertMeta(Clock.System.now().toString())
+        return Channels.entries.flatMap { channel ->
+            val videos = getRemoteVideos(channel.channelName)
+            val count = Random.nextInt(3, 8)
+            if (videos.size <= 3) {
+                videos
+            } else {
+                videos.shuffled().take(count.coerceAtMost(videos.size))
+            }
+        }
+    }
+
+    private suspend fun getRemoteVideos(channelName: String): List<YoutubeVideoModel> {
+        return when (val result = dataSource.getVideos(channelName)) {
+            is Result.Success -> {
+                val data = mapper.mapToYoutubeVideoModel(result.data)
+                dao.clearAndCreateVideos(channelName = channelName, data)
+                data
+            }
+            is Result.Error -> {
+                throw result.error.toThrowable()
+            }
+        }
     }
 }

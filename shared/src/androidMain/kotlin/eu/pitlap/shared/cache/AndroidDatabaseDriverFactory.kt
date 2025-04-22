@@ -1,6 +1,5 @@
 package eu.pitlap.shared.cache
 
-import android.app.Application
 import android.content.Context
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver

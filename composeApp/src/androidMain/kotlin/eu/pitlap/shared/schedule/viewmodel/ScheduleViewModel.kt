@@ -34,7 +34,7 @@ class ScheduleViewModel(
 
         viewModelScope.launch {
             try {
-                val schedule = pitlapService.getSchedule(year)
+                val schedule = pitlapService.getSchedule(year,)
                 val filtered = if (showPastEvents) schedule.filter { !isNextEvent(it) }.reversed() else schedule.filter { isNextEvent(it) }
                 val next = schedule.firstOrNull { isNextEvent(it) }
 

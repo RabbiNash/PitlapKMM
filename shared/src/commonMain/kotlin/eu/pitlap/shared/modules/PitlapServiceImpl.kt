@@ -36,12 +36,12 @@ internal class PitlapServiceImpl(
     private val weatherRepository: WeatherRepository = WeatherRepositoryImpl(),
     private val rssFeedRepository: RSSFeedRepository = RSSFeedRepositoryImpl()
 ): PitlapService {
-    override suspend fun getDriverStandings(): List<DriverStandingModel> {
-        return standingsRepository.getDriverStandings()
+    override suspend fun getDriverStandings(forceRefresh: Boolean): List<DriverStandingModel> {
+        return standingsRepository.getDriverStandings(forceRefresh)
     }
 
-    override suspend fun getConstructorStandings(): List<ConstructorStandingModel> {
-        return standingsRepository.getConstructorStandings()
+    override suspend fun getConstructorStandings(forceRefresh: Boolean): List<ConstructorStandingModel> {
+        return standingsRepository.getConstructorStandings(forceRefresh = forceRefresh)
     }
 
     override suspend fun getPracticeLaps(
@@ -60,12 +60,16 @@ internal class PitlapServiceImpl(
         return trackEventsRepository.getRaceResults(year, round)
     }
 
-    override suspend fun getSchedule(year: Int): List<EventScheduleModel> {
-        return scheduleRepository.getSchedule(year)
+    override suspend fun getSchedule(year: Int, forceRefresh: Boolean): List<EventScheduleModel> {
+        return scheduleRepository.getSchedule(year, forceRefresh)
     }
 
     override suspend fun getEvent(year: Int, round: Int): EventScheduleModel? {
         return scheduleRepository.getEvent(year, round)
+    }
+
+    override suspend fun getNextScheduledEvent(): EventScheduleModel? {
+        return scheduleRepository.getNextEvent()
     }
 
     override suspend fun getRaceSummary(year: Int, round: Int): RaceSummaryModel {
@@ -76,12 +80,12 @@ internal class PitlapServiceImpl(
         return summaryRepository.getTrackSummary(trackName)
     }
 
-    override suspend fun getYTVideos(channelName: String): List<YoutubeVideoModel> {
-        return youtubeVideosRepository.getVideos(channelName)
+    override suspend fun getYTVideos(channelName: String, forceRefresh: Boolean): List<YoutubeVideoModel> {
+        return youtubeVideosRepository.getVideos(channelName, forceRefresh = forceRefresh)
     }
 
-    override suspend fun getRankedVideos(): List<YoutubeVideoModel> {
-        return youtubeVideosRepository.getRankedVideos()
+    override suspend fun getRankedVideos(forceRefresh: Boolean): List<YoutubeVideoModel> {
+        return youtubeVideosRepository.getRankedVideos(forceRefresh)
     }
 
     override suspend fun getVideoById(videoId: String): YoutubeVideoModel? {
@@ -92,8 +96,8 @@ internal class PitlapServiceImpl(
        return weatherRepository.getWeatherSummary(year, round)
     }
 
-    override suspend fun getFeedArticles(feedUrl: String): List<RSSFeedItem> {
-        return rssFeedRepository.getRSSFeed(feedUrl)
+    override suspend fun getFeedArticles(feedUrl: String, forceRefresh: Boolean): List<RSSFeedItem> {
+        return rssFeedRepository.getRSSFeed(feedUrl, forceRefresh)
     }
 
     override suspend fun getArticleFeedById(id: String): RSSFeedItem? {

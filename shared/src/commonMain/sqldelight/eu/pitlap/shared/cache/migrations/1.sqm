@@ -7,3 +7,13 @@ CREATE TABLE FeedItemMeta (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     last_fetched TEXT NOT NULL
 );
+
+CREATE TABLE YoutubeVideo (
+    video_id TEXT NOT NULL PRIMARY KEY,
+    thumbnail_url TEXT,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    channel_name TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);

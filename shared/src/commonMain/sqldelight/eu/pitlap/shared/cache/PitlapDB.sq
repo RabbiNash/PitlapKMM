@@ -50,6 +50,13 @@ SELECT EventSchedule.*
 FROM EventSchedule
 WHERE year = ?;
 
+selectNextUpcomingEvent:
+SELECT *
+FROM EventSchedule
+WHERE datetime(session5DateUTC) > datetime('now')
+ORDER BY datetime(session5DateUTC) ASC
+LIMIT 1;
+
 insertOrReplaceVideo:
 INSERT OR REPLACE INTO YoutubeVideo (
     video_id, thumbnail_url, title, description, channel_name, created_at, updated_at

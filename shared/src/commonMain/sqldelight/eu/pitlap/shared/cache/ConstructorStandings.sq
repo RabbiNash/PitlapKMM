@@ -1,0 +1,33 @@
+-- ConstructorStandings.sq
+CREATE TABLE ConstructorStandings (
+    position INTEGER NOT NULL,
+    positionText TEXT NOT NULL,
+    points INTEGER NOT NULL,
+    wins INTEGER NOT NULL,
+    constructorId TEXT NOT NULL PRIMARY KEY,
+    constructorName TEXT NOT NULL
+);
+
+insertOrReplaceConstructorStanding:
+INSERT OR REPLACE INTO ConstructorStandings (
+    position,
+    positionText,
+    points,
+    wins,
+    constructorId,
+    constructorName
+) VALUES (
+    :position,
+    :positionText,
+    :points,
+    :wins,
+    :constructorId,
+    :constructorName
+);
+
+selectAllConstructors:
+SELECT * FROM ConstructorStandings;
+
+deleteAllConstructors:
+DELETE FROM ConstructorStandings;
+

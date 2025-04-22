@@ -8,4 +8,7 @@ internal interface ScheduleRepository {
 
     @Throws(Throwable::class)
     suspend fun getEvent(year: Int, round: Int): EventScheduleModel?
+
+    @Throws(Throwable::class)
+    suspend fun getNextEvent(): EventScheduleModel?
 }

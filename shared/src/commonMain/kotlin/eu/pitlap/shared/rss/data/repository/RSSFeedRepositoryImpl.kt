@@ -1,6 +1,6 @@
 package eu.pitlap.shared.rss.data.repository
-import eu.pitlap.shared.cache.Database
-import eu.pitlap.shared.cache.DatabaseProvider
+import eu.pitlap.shared.cache.dao.articles.ArticleDAO
+import eu.pitlap.shared.cache.factory.DatabaseProvider
 import eu.pitlap.shared.rss.data.provider.RSSProvider
 import eu.pitlap.shared.rss.data.provider.RSSProviderImpl
 import eu.pitlap.shared.rss.domain.RSSFeedItem
@@ -12,15 +12,15 @@ import kotlin.time.Instant
 
 internal class RSSFeedRepositoryImpl(
     private val rssProvider: RSSProvider = RSSProviderImpl(),
-    private val database: Database = DatabaseProvider.get(),
+    private val dao: ArticleDAO = DatabaseProvider.getArticleDAO(),
 ): RSSFeedRepository {
     private val ttl = Duration.parse("PT1H")
 
     @OptIn(ExperimentalTime::class)
-    override suspend fun getRSSFeed(url: String): List<RSSFeedItem> {
-        val cachedEvents = database.getArticlesByFeedSource(url)
-        val meta = database.getFeedMeta()
-        val events = if (meta != null && Clock.System.now() - Instant.parse(meta.last_fetched) < ttl) {
+    override suspend fun getRSSFeed(url: String, forceRefresh: Boolean): List<RSSFeedItem> {
+        val cachedEvents = dao.getArticlesByFeedSource(url)
+        val meta = dao.getFeedMeta()
+        val events = if (meta != null && !forceRefresh && Clock.System.now() - Instant.parse(meta.last_fetched) < ttl) {
             cachedEvents
         } else {
             emptyList()
@@ -40,14 +40,14 @@ internal class RSSFeedRepositoryImpl(
                         imageUrl = it.image ?: "",
                     )
                 }
-                database.clearAndCreateArticles(url, articles)
-                database.insertMeta(now)
+                dao.clearAndCreateArticles(url, articles)
+                dao.insertMeta(now)
                 articles
             }
     }
 
     override suspend fun getArticleFeedById(id: String): RSSFeedItem? {
-        return database.getArticleById(id)
+        return dao.getArticleById(id)
     }
 
     private fun removeHtmlTagsPreserveLineBreaks(html: String): String {

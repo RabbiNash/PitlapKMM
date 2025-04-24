@@ -20,6 +20,7 @@ internal class ArticleDAOImpl(
         articleQueries.selectAllItemsByFeedSource(feedUrl, FeedItemMapper::mapToFeedItem).executeAsList()
 
     override fun clearAndCreateArticles(feedUrl: String, articles: List<RSSFeedItem>) {
+        articleQueries.deteleAllItemsUrl(feedUrl)
         articles.forEach {
             insertOrReplaceArticle(feedUrl, it)
         }

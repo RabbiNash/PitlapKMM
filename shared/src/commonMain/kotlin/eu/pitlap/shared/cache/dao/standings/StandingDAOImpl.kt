@@ -26,6 +26,7 @@ internal class StandingDAOImpl(
     }
 
     override fun clearAndCreateDriverStandings(events: List<DriverStandingModel>) {
+        driverStandingsQueries.deleteAll()
         events.forEach {
             driverStandingsQueries.insertOrReplaceDriverStanding(
                 position = it.position.toLong(),
@@ -42,6 +43,7 @@ internal class StandingDAOImpl(
     }
 
     override fun clearAndCreateConstructorStandings(events: List<ConstructorStandingModel>) {
+        constructorStandingsQueries.deleteAllConstructors()
         events.forEach {
             constructorStandingsQueries.insertOrReplaceConstructorStanding(
                 position = it.position.toLong(),

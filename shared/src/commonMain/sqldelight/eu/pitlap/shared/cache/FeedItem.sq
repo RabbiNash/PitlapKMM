@@ -23,7 +23,7 @@ ORDER BY pub_date DESC;
 selectAllItemsByFeedSource:
 SELECT * FROM FeedItem
 WHERE feed_url = ?
-ORDER BY pub_date ASC;
+ORDER BY pub_date DESC;
 
 selectItemById:
 SELECT * FROM FeedItem
@@ -32,3 +32,6 @@ LIMIT 1;
 
 deleteAllItems:
 DELETE FROM FeedItem;
+
+deteleAllItemsUrl:
+DELETE FROM FeedItem WHERE feed_url = ?;

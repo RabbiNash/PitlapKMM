@@ -10,7 +10,6 @@ import eu.pitlap.shared.videos.domain.mapper.YoutubeVideoMapper
 import eu.pitlap.shared.videos.domain.model.Channels
 import eu.pitlap.shared.videos.domain.model.YoutubeVideoModel
 import eu.pitlap.shared.videos.domain.repository.YoutubeVideosRepository
-import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
@@ -47,16 +46,14 @@ internal class YoutubeVideosRepositoryImpl(
     override suspend fun getRankedVideos(forceRefresh: Boolean): List<YoutubeVideoModel> {
         val cachedVideos = dao.getAllVideos()
         val meta = dao.getVideoMeta()
-        val videos = if (meta != null && Clock.System.now() - Instant.parse(meta.last_fetched) < ttl) {
+        val videos = if (meta != null && !forceRefresh && Clock.System.now() - Instant.parse(meta.last_fetched) < ttl) {
             cachedVideos
         } else {
             emptyList()
         }
 
-        return if (forceRefresh) {
+        return videos.ifEmpty {
             getVideosForRanking()
-        } else {
-            videos
         }
     }
 
@@ -69,12 +66,7 @@ internal class YoutubeVideosRepositoryImpl(
         dao.insertMeta(Clock.System.now().toString())
         return Channels.entries.flatMap { channel ->
             val videos = getRemoteVideos(channel.channelName)
-            val count = Random.nextInt(3, 8)
-            if (videos.size <= 3) {
-                videos
-            } else {
-                videos.shuffled().take(count.coerceAtMost(videos.size))
-            }
+            videos
         }
     }
 
@@ -83,7 +75,7 @@ internal class YoutubeVideosRepositoryImpl(
             is Result.Success -> {
                 val data = mapper.mapToYoutubeVideoModel(result.data)
                 dao.clearAndCreateVideos(channelName = channelName, data)
-                data
+                dao.getVideosByChannelName(channelName)
             }
             is Result.Error -> {
                 throw result.error.toThrowable()

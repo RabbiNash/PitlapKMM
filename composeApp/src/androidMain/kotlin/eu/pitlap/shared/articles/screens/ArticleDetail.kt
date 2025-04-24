@@ -1,15 +1,28 @@
 package eu.pitlap.shared.articles.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Link
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,7 +35,6 @@ import eu.pitlap.shared.articles.state.ArticleDetailScreenEvent
 import eu.pitlap.shared.articles.viewmodel.ArticleDetailViewModel
 import eu.pitlap.shared.rss.domain.RSSFeedItem
 import eu.pitlap.shared.ui.pitlapTypography
-import eu.pitlap.shared.utils.DateUtils
 
 @Composable
 fun ArticleDetail(
@@ -53,13 +65,6 @@ fun ArticleDetail(
             )
 
             ArticleMeta(feed = feed)
-
-            Text(
-                text = feed.description,
-                style = pitlapTypography.bodyLarge,
-                modifier = Modifier
-                    .padding(16.dp)
-            )
 
             ReadMoreLink(
                 articleUrl = feed.link,

@@ -19,11 +19,11 @@ final class StandingsViewModel: ObservableObject {
     }
     
     func getDriverStandings() async {        
-        await fetchStandings { [self] in try await pitlapService.getDriverStandings().map { StandingRowUiModel(from: $0) } }
+        await fetchStandings { [self] in try await pitlapService.getDriverStandings(forceRefresh: true).map { StandingRowUiModel(from: $0) } }
     }
     
     func getConstructorStandings() async {
-        await fetchStandings { [self] in try await pitlapService.getConstructorStandings().map { StandingRowUiModel(from: $0) } }
+        await fetchStandings { [self] in try await pitlapService.getConstructorStandings(forceRefresh: true).map { StandingRowUiModel(from: $0) } }
     }
     
     @MainActor

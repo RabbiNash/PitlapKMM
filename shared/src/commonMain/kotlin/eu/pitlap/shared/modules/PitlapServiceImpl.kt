@@ -10,6 +10,9 @@ import eu.pitlap.shared.race.domain.model.TopSpeedModel
 import eu.pitlap.shared.race.domain.model.TrackSummaryModel
 import eu.pitlap.shared.race.domain.repository.SummaryRepository
 import eu.pitlap.shared.race.domain.repository.TrackEventsRepository
+import eu.pitlap.shared.radio.data.repository.TeamRadioRepositoryImpl
+import eu.pitlap.shared.radio.domain.model.TeamRadioModel
+import eu.pitlap.shared.radio.domain.repository.TeamRadioRepository
 import eu.pitlap.shared.rss.data.repository.RSSFeedRepositoryImpl
 import eu.pitlap.shared.rss.domain.RSSFeedItem
 import eu.pitlap.shared.rss.domain.repository.RSSFeedRepository
@@ -34,7 +37,8 @@ internal class PitlapServiceImpl(
     private val trackEventsRepository: TrackEventsRepository = TrackEventsRepositoryImpl(),
     private val youtubeVideosRepository: YoutubeVideosRepository = YoutubeVideosRepositoryImpl(),
     private val weatherRepository: WeatherRepository = WeatherRepositoryImpl(),
-    private val rssFeedRepository: RSSFeedRepository = RSSFeedRepositoryImpl()
+    private val rssFeedRepository: RSSFeedRepository = RSSFeedRepositoryImpl(),
+    private val teamRadioRepository: TeamRadioRepository = TeamRadioRepositoryImpl()
 ): PitlapService {
     override suspend fun getDriverStandings(forceRefresh: Boolean): List<DriverStandingModel> {
         return standingsRepository.getDriverStandings(forceRefresh)
@@ -110,5 +114,9 @@ internal class PitlapServiceImpl(
         sessionName: String
     ): List<TopSpeedModel> {
         return trackEventsRepository.getTopSpeeds(year, round, sessionName)
+    }
+
+    override suspend fun getLatestTeamRadio(driverNumber: Int): List<TeamRadioModel> {
+        return teamRadioRepository.getLatestTeamRadio(driverNumber)
     }
 }

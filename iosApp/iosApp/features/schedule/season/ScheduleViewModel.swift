@@ -24,7 +24,7 @@ final class ScheduleViewModel: ObservableObject {
     @MainActor
     func loadSchedule(year: Int, showPastEvents: Bool = false) async {
         do {
-            let schedule = try await pitlapService.getSchedule(year: Int32(year))
+            let schedule = try await pitlapService.getSchedule(year: Int32(year), forceRefresh: true)
             self.seasonCalendar = showPastEvents ? schedule : schedule.filter { self.isNextEvent(event: $0) }
             self.nextSession = getNextEvent(from: self.seasonCalendar)
         } catch {
@@ -50,7 +50,7 @@ final class ScheduleViewModel: ObservableObject {
     @MainActor
     func loadYoutube() async {
         do {
-            let videos = try await pitlapService.getYTVideos(channelName: "Formula 1")
+            let videos = try await pitlapService.getYTVideos(channelName: "Formula 1", forceRefresh: true)
             print(videos)
         } catch {
             print("error handling")

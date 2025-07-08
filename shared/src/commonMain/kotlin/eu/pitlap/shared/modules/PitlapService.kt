@@ -6,6 +6,7 @@ import eu.pitlap.shared.race.domain.model.RaceResultModel
 import eu.pitlap.shared.race.domain.model.RaceSummaryModel
 import eu.pitlap.shared.race.domain.model.TopSpeedModel
 import eu.pitlap.shared.race.domain.model.TrackSummaryModel
+import eu.pitlap.shared.radio.domain.model.TeamRadioModel
 import eu.pitlap.shared.rss.domain.RSSFeedItem
 import eu.pitlap.shared.schedule.domain.model.EventScheduleModel
 import eu.pitlap.shared.standings.domain.model.ConstructorStandingModel
@@ -48,4 +49,6 @@ interface PitlapService {
     suspend fun getArticleFeedById(id: String): RSSFeedItem?
     @Throws(Throwable::class)
     suspend fun getSessionTopSpeeds(year: Int, round: Int, sessionName: String): List<TopSpeedModel>
+    @Throws(Throwable::class)
+    suspend fun getLatestTeamRadio(driverNumber: Int): List<TeamRadioModel>
 }

@@ -6,7 +6,6 @@ import eu.pitlap.shared.modules.Pitlap
 import eu.pitlap.shared.modules.PitlapService
 import eu.pitlap.shared.schedule.state.EventDetailScreenEvent
 import eu.pitlap.shared.schedule.state.EventDetailScreenState
-import eu.pitlap.shared.utils.DateUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,6 +34,9 @@ class EventDetailViewModel(
         viewModelScope.launch {
             val eventResult = runCatching { pitlapService.getEvent(year, round) }
             val weatherResult = runCatching { pitlapService.getWeather(year, round) }
+            val teamRadio = runCatching {
+                pitlapService.getLatestTeamRadio(driverNumber = 4)
+            }
 
             eventResult.onSuccess { event ->
                 _state.update { it.copy(event = event) }
@@ -43,6 +45,10 @@ class EventDetailViewModel(
 
             weatherResult.onSuccess {
                 _state.update { it.copy(weather = it.weather) }
+            }
+
+            teamRadio.onSuccess {
+                println(it)
             }
 
             val errorMessage = eventResult.exceptionOrNull()?.message

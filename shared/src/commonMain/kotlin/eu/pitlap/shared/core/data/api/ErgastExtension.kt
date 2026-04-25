@@ -1,9 +1,9 @@
 package eu.pitlap.shared.core.data.api
 
-import eu.pitlap.shared.core.data.models.ApiResponse
+import eu.pitlap.shared.core.data.models.ergast.ErgastResponse
+import eu.pitlap.shared.core.data.models.ergast.tables.ErgastTable
 import eu.pitlap.shared.core.domain.ApiError
 import eu.pitlap.shared.core.domain.Result
-import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.statement.HttpResponse
@@ -11,44 +11,35 @@ import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.coroutineContext
 
-suspend inline fun <reified T> safeCall(
-    ignoreApiResponse: Boolean =  false,
-    execute: () -> HttpResponse
+suspend inline fun <reified T : ErgastTable> ergast(
+    noinline call: suspend () -> HttpResponse
+) = safeErgastCall<T>(call)
+
+suspend inline fun <reified T : ErgastTable> safeErgastCall(
+    crossinline execute: suspend () -> HttpResponse
 ): Result<T, ApiError.Remote> {
     val response = try {
         execute()
-    } catch(e: SocketTimeoutException) {
+    } catch (e: SocketTimeoutException) {
         return Result.Error(ApiError.Remote.REQUEST_TIMEOUT)
-    } catch(e: UnresolvedAddressException) {
+    } catch (e: UnresolvedAddressException) {
         return Result.Error(ApiError.Remote.NO_INTERNET)
     } catch (e: Exception) {
         coroutineContext.ensureActive()
         return Result.Error(ApiError.Remote.UNKNOWN)
     }
 
-    return responseToResult(ignoreApiResponse, response)
-}
-
-suspend inline fun <reified T> responseToResult(
-    ignoreApiResponse: Boolean = false,
-    response: HttpResponse
-): Result<T, ApiError.Remote> {
     return when (response.status.value) {
         in 200..299 -> {
             try {
-                return if (ignoreApiResponse) {
-                    val data: T = response.body()
-                    Result.Success(data)
+                val ergastResponse: ErgastResponse = response.body()
+                val table = ergastResponse.mrData.table
+
+                if (table is T) {
+                    Result.Success(table)
                 } else {
-                    val apiResponse: ApiResponse<T> = response.body()
-                    if (apiResponse.success) {
-                        Result.Success(apiResponse.data)
-                    } else {
-                        Result.Error(ApiError.Remote.SERVER)
-                    }
+                    Result.Error(ApiError.Remote.SERIALIZATION)
                 }
-            } catch (e: NoTransformationFoundException) {
-                Result.Error(ApiError.Remote.SERIALIZATION)
             } catch (e: Exception) {
                 coroutineContext.ensureActive()
                 Result.Error(ApiError.Remote.SERIALIZATION)
@@ -61,4 +52,3 @@ suspend inline fun <reified T> responseToResult(
         else -> Result.Error(ApiError.Remote.UNKNOWN)
     }
 }
-

@@ -38,6 +38,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
             implementation(libs.koin.core)
             implementation(libs.bundles.ktor)
             implementation(libs.rssparser)

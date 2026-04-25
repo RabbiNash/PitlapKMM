@@ -16,15 +16,14 @@ internal class ScheduleRepositoryImpl(
 ): ScheduleRepository {
     override suspend fun getSchedule(year: Int, forceRefresh: Boolean): List<EventScheduleModel> {
         val cachedEvents = dao.getEventByYear(year = year.toLong())
-        return if (cachedEvents.isNotEmpty() && !forceRefresh) {
-            cachedEvents
-        } else {
-            when(val result = dataSource.getEventSchedule(year)) {
+        return cachedEvents.ifEmpty {
+            when (val result = dataSource.getEventSchedule(year)) {
                 is Result.Success -> {
                     result.data.map { it.toEventModel() }.also {
                         dao.clearAndCreateEvents(it)
                     }
                 }
+
                 is Result.Error -> {
                     throw result.error.toThrowable()
                 }

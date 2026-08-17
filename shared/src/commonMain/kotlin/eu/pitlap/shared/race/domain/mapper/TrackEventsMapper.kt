@@ -1,8 +1,7 @@
 package eu.pitlap.shared.race.domain.mapper
 
 import eu.pitlap.shared.race.data.dto.LapDto
-import eu.pitlap.shared.race.data.dto.QualifyingResultsDto
-import eu.pitlap.shared.race.data.dto.RaceResultsDto
+import eu.pitlap.shared.core.data.models.ergast.tables.RaceTable
 import eu.pitlap.shared.race.domain.model.LapModel
 import eu.pitlap.shared.race.domain.model.QualifyingResultModel
 import eu.pitlap.shared.race.domain.model.RaceResultModel
@@ -18,30 +17,30 @@ internal fun LapDto.toLapModel(): LapModel {
     )
 }
 
-internal fun QualifyingResultsDto.toResultsModel() : List<QualifyingResultModel> {
-    return this.results.map {
+internal fun RaceTable.toQualifyingResultsModel(): List<QualifyingResultModel> {
+    return races.singleOrNull()?.qualifyingResults.orEmpty().map {
         QualifyingResultModel(
-            position = it.position,
+            position = it.position.toIntOrNull() ?: 0,
             q1 = it.q1,
             q2 = it.q2,
             q3 = it.q3,
-            teamName = it.teamName,
-            headshotUrl = it.headshotUrl,
-            fullName = it.fullName
+            teamName = it.constructor.name,
+            headshotUrl = "",
+            fullName = "${it.driver.givenName} ${it.driver.familyName}"
         )
     }
 }
 
-internal fun RaceResultsDto.toResultsModel(): List<RaceResultModel> {
-    return results.map {
+internal fun RaceTable.toRaceResultsModel(): List<RaceResultModel> {
+    return races.singleOrNull()?.results.orEmpty().map {
         RaceResultModel(
-            position = it.position,
-            points = it.points,
-            teamName = it.teamName,
-            fullName = it.fullName,
-            headshotURL = it.headshotURL,
-            gridPosition = it.gridPosition,
-            classifiedPosition = it.classifiedPosition,
+            position = it.position.toIntOrNull() ?: 0,
+            points = it.points.toIntOrNull() ?: 0,
+            teamName = it.constructor.name,
+            fullName = "${it.driver.givenName} ${it.driver.familyName}",
+            headshotURL = "",
+            gridPosition = it.grid.toIntOrNull() ?: 0,
+            classifiedPosition = it.positionText,
         )
     }
 }

@@ -1,12 +1,12 @@
 package eu.pitlap.shared.race.data.source
 
 import eu.pitlap.shared.core.data.api.HttpClientProvider
+import eu.pitlap.shared.core.data.api.ergast
 import eu.pitlap.shared.core.data.api.safeCall
+import eu.pitlap.shared.core.data.models.ergast.tables.RaceTable
 import eu.pitlap.shared.core.domain.ApiError
 import eu.pitlap.shared.core.domain.Result
 import eu.pitlap.shared.race.data.dto.PracticeLapsDto
-import eu.pitlap.shared.race.data.dto.QualifyingResultsDto
-import eu.pitlap.shared.race.data.dto.RaceResultsDto
 import eu.pitlap.shared.race.data.dto.TopSpeedsDto
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -29,15 +29,15 @@ internal class TrackEventsDataSourceImpl(
     override suspend fun getQualifyingResults(
         year: Int,
         round: Int
-    ): Result<QualifyingResultsDto, ApiError.Remote> {
-        return safeCall<QualifyingResultsDto> {
-            client.get(urlString = "$BASE_URL/quali/convectional/$year/$round")
+    ): Result<RaceTable, ApiError.Remote> {
+        return ergast<RaceTable> {
+            client.get(urlString = "https://api.jolpi.ca/ergast/f1/$year/$round/qualifying")
         }
     }
 
-    override suspend fun getRaceResults(year: Int, round: Int): Result<RaceResultsDto, ApiError.Remote> {
-        return safeCall<RaceResultsDto> {
-            client.get(urlString = "$BASE_URL/race/result/convectional/$year/$round")
+    override suspend fun getRaceResults(year: Int, round: Int): Result<RaceTable, ApiError.Remote> {
+        return ergast<RaceTable> {
+            client.get(urlString = "https://api.jolpi.ca/ergast/f1/$year/$round/results")
         }
     }
 

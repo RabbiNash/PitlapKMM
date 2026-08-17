@@ -6,7 +6,8 @@ import eu.pitlap.shared.race.data.source.TrackEventsDataSource
 import eu.pitlap.shared.race.data.source.TrackEventsDataSourceImpl
 import eu.pitlap.shared.race.domain.mapper.GroupedLapsMapper
 import eu.pitlap.shared.race.domain.mapper.toLapModel
-import eu.pitlap.shared.race.domain.mapper.toResultsModel
+import eu.pitlap.shared.race.domain.mapper.toQualifyingResultsModel
+import eu.pitlap.shared.race.domain.mapper.toRaceResultsModel
 import eu.pitlap.shared.race.domain.mapper.toTopSpeedsModel
 import eu.pitlap.shared.race.domain.model.GroupedLapModel
 import eu.pitlap.shared.race.domain.model.QualifyingResultModel
@@ -31,14 +32,14 @@ internal class TrackEventsRepositoryImpl(
 
     override suspend fun getQualifyingResults(year: Int, round: Int): List<QualifyingResultModel> {
         return when(val result = dataSource.getQualifyingResults(year = year, round = round)) {
-            is Result.Success -> result.data.toResultsModel()
+            is Result.Success -> result.data.toQualifyingResultsModel()
             is Result.Error -> throw result.error.toThrowable()
         }
     }
 
     override suspend fun getRaceResults(year: Int, round: Int): List<RaceResultModel> {
         return when(val result = dataSource.getRaceResults(year = year, round = round)) {
-            is Result.Success -> result.data.toResultsModel()
+            is Result.Success -> result.data.toRaceResultsModel()
             is Result.Error -> throw result.error.toThrowable()
         }
     }

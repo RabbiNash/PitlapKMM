@@ -53,6 +53,10 @@ kotlin {
             implementation(libs.native.driver)
             implementation(libs.ktor.client.darwin)
         }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
     }
 }
 

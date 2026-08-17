@@ -21,7 +21,11 @@ data class Race(
     @SerialName("Sprint")
     val sprint: Session? = null,
     @SerialName("SprintQualifying")
-    val sprintQualifying: Session? = null
+    val sprintQualifying: Session? = null,
+    @SerialName("Results")
+    val results: List<RaceResult>? = null,
+    @SerialName("QualifyingResults")
+    val qualifyingResults: List<QualifyingResult>? = null
 )
 
 @kotlinx.serialization.Serializable
